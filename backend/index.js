@@ -18,6 +18,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Hobpya API is running",
+  });
+});
+
 app.use("/api/user", userRoutes);
 
 const startServer = async () => {
