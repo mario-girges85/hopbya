@@ -124,6 +124,15 @@ const Signup = ({ language = "ar" }) => {
     updateFieldValue(name, value);
   };
 
+  const getApiBaseUrl = () => {
+    const baseUrl = import.meta.env.VITE_DEMO_API_URL?.trim();
+    if (!baseUrl) {
+      return null;
+    }
+
+    return baseUrl.replace(/\/+$/, "");
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setSubmitAttempted(true);
@@ -135,11 +144,12 @@ const Signup = ({ language = "ar" }) => {
       return;
     }
 
-    const endpoint = `${import.meta.env.VITE_DEMO_API_URL}/api/user/signup`;
-    if (!endpoint) {
+    const apiBaseUrl = getApiBaseUrl();
+    if (!apiBaseUrl) {
       setSubmitStatus("error");
       return;
     }
+    const endpoint = `${apiBaseUrl}/api/user/signup`;
 
     try {
       setIsSubmitting(true);

@@ -50,6 +50,15 @@ const Login = ({ language = "ar" }) => {
     return next;
   };
 
+  const getApiBaseUrl = () => {
+    const baseUrl = import.meta.env.VITE_DEMO_API_URL?.trim();
+    if (!baseUrl) {
+      return null;
+    }
+
+    return baseUrl.replace(/\/+$/, "");
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setSubmitAttempted(true);
@@ -59,7 +68,7 @@ const Login = ({ language = "ar" }) => {
       return;
     }
 
-    const apiBaseUrl = import.meta.env.VITE_DEMO_API_URL;
+    const apiBaseUrl = getApiBaseUrl();
     if (!apiBaseUrl) {
       setSubmitStatus("error");
       return;
