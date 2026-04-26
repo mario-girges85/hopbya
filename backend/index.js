@@ -1,31 +1,7 @@
-const express = require("express");
 const dotenv = require("dotenv").config();
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const path = require("path");
-const Sequelize = require("sequelize");
-
+const app = require("./app");
 const sequelize = require("./util/db");
-
-const userRoutes = require("./routes/user");
-
-const app = express();
 const port = process.env.PORT;
-
-app.use(cors());
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
-
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Hobpya API is running",
-  });
-});
-
-app.use("/api/user", userRoutes);
 
 const startServer = async () => {
   try {
