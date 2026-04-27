@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import Home from "./pages/Home.jsx";
 import Signup from "./pages/Signup.jsx";
 import Login from "./pages/Login.jsx";
+import UnderConstruction from "./pages/UnderConstruction.jsx";
 
 const LANGUAGE_COOKIE_KEY = "site_language";
 const ONE_YEAR_IN_DAYS = 365;
@@ -63,7 +64,10 @@ const App = () => {
         <Route path="/" element={<Home language={language} />} />
         <Route path="/signup" element={<Signup language={language} />} />
         <Route path="/login" element={<Login language={language} />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route
+          path="*"
+          element={<UnderConstruction language={language} />}
+        />
       </Routes>
 
       <Footer language={language} />
