@@ -62,6 +62,15 @@ const App = () => {
 
       <Routes>
         <Route path="/" element={<Home language={language} />} />
+        <Route path="/about" element={<UnderConstruction language={language} />} />
+        <Route
+          path="/services"
+          element={<UnderConstruction language={language} />}
+        />
+        <Route
+          path="/contact"
+          element={<UnderConstruction language={language} />}
+        />
         <Route path="/signup" element={<Signup language={language} />} />
         <Route path="/login" element={<Login language={language} />} />
         <Route

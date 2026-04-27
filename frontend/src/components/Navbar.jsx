@@ -3,8 +3,18 @@ import { Link } from "react-router-dom";
 import logoImage from "../assets/logo.png";
 
 const navItems = {
-  ar: ["الرئيسية", "من نحن", "الخدمات", "تواصل معنا"],
-  en: ["Home", "About", "Services", "Contact"],
+  ar: [
+    { label: "الرئيسية", to: "/" },
+    { label: "من نحن", to: "/about" },
+    { label: "الخدمات", to: "/services" },
+    { label: "تواصل معنا", to: "/contact" },
+  ],
+  en: [
+    { label: "Home", to: "/" },
+    { label: "About", to: "/about" },
+    { label: "Services", to: "/services" },
+    { label: "Contact", to: "/contact" },
+  ],
 };
 
 const LogoSection = () => {
@@ -34,27 +44,16 @@ const NavButtons = ({ language, mobile = false, onItemClick }) => {
         mobile ? "flex-col" : "flex-wrap justify-center"
       }`}
     >
-      {items.map((item, index) =>
-        index === 0 ? (
-          <Link
-            key={item}
-            to="/"
-            onClick={onItemClick}
-            className={`${navButtonClass} ${mobile ? "w-full text-center" : ""}`}
-          >
-            {item}
-          </Link>
-        ) : (
-          <button
-            key={item}
-            type="button"
-            onClick={onItemClick}
-            className={`${navButtonClass} ${mobile ? "w-full" : ""}`}
-          >
-            {item}
-          </button>
-        ),
-      )}
+      {items.map((item) => (
+        <Link
+          key={item.to}
+          to={item.to}
+          onClick={onItemClick}
+          className={`${navButtonClass} ${mobile ? "w-full text-center" : ""}`}
+        >
+          {item.label}
+        </Link>
+      ))}
     </div>
   );
 };
