@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import logoImage from "../assets/logo.png";
+import UserAvatar from "./UserAvatar.jsx";
 
 const navItems = {
   ar: [
@@ -129,9 +130,11 @@ const LanguageButton = ({ language, onToggleLanguage }) => {
 
 const Navbar = ({
   language = "ar",
+  user,
   onToggleLanguage,
   onOpenLogin,
   onOpenSignup,
+  onLoggedOut,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -154,11 +157,19 @@ const Navbar = ({
               language={language}
               onToggleLanguage={onToggleLanguage}
             />
-            <AuthButtons
-              language={language}
-              onLoginClick={onOpenLogin}
-              onSignupClick={onOpenSignup}
-            />
+            {user ? (
+              <UserAvatar
+                user={user}
+                language={language}
+                onLogout={onLoggedOut}
+              />
+            ) : (
+              <AuthButtons
+                language={language}
+                onLoginClick={onOpenLogin}
+                onSignupClick={onOpenSignup}
+              />
+            )}
           </div>
 
           <button
@@ -201,13 +212,23 @@ const Navbar = ({
               onToggleLanguage={onToggleLanguage}
             />
             <NavButtons language={language} mobile onItemClick={closeMenu} />
-            <AuthButtons
-              language={language}
-              mobile
-              onActionClick={closeMenu}
-              onLoginClick={onOpenLogin}
-              onSignupClick={onOpenSignup}
-            />
+            {user ? (
+              <UserAvatar
+                user={user}
+                language={language}
+                mobile
+                onActionClick={closeMenu}
+                onLogout={onLoggedOut}
+              />
+            ) : (
+              <AuthButtons
+                language={language}
+                mobile
+                onActionClick={closeMenu}
+                onLoginClick={onOpenLogin}
+                onSignupClick={onOpenSignup}
+              />
+            )}
           </div>
         )}
       </nav>

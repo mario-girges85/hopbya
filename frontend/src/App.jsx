@@ -8,6 +8,7 @@ import Login from "./pages/Login.jsx";
 import UnderConstruction from "./pages/UnderConstruction.jsx";
 
 const LANGUAGE_COOKIE_KEY = "site_language";
+const USER_STORAGE_KEY = "user";
 const ONE_YEAR_IN_DAYS = 365;
 
 const getCookieValue = (key) => {
@@ -25,6 +26,15 @@ const setCookieValue = (key, value, days) => {
   )}; expires=${expires}; path=/; SameSite=Lax`;
 };
 
+const getStoredUser = () => {
+  try {
+    const savedUser = localStorage.getItem(USER_STORAGE_KEY);
+    return savedUser ? JSON.parse(savedUser) : null;
+  } catch {
+    return null;
+  }
+};
+
 const App = () => {
   const [language, setLanguage] = useState(() => {
     const savedLanguage = getCookieValue(LANGUAGE_COOKIE_KEY);
@@ -32,6 +42,7 @@ const App = () => {
       ? savedLanguage
       : "ar";
   });
+  const [currentUser, setCurrentUser] = useState(getStoredUser);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,6 +53,20 @@ const App = () => {
     html.dir = isArabic ? "rtl" : "ltr";
     setCookieValue(LANGUAGE_COOKIE_KEY, language, ONE_YEAR_IN_DAYS);
   }, [language]);
+
+  useEffect(() => {
+    const syncUser = () => {
+      setCurrentUser(getStoredUser());
+    };
+
+    window.addEventListener("storage", syncUser);
+    window.addEventListener("auth-changed", syncUser);
+
+    return () => {
+      window.removeEventListener("storage", syncUser);
+      window.removeEventListener("auth-changed", syncUser);
+    };
+  }, []);
 
   const toggleLanguage = () => {
     setLanguage((prev) => {
@@ -55,9 +80,14 @@ const App = () => {
     <div className="min-h-screen">
       <Navbar
         language={language}
+        user={currentUser}
         onToggleLanguage={toggleLanguage}
         onOpenLogin={() => navigate("/login")}
         onOpenSignup={() => navigate("/signup")}
+        onLoggedOut={() => {
+          setCurrentUser(null);
+          navigate("/");
+        }}
       />
 
       <Routes>

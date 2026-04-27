@@ -130,13 +130,37 @@ module.exports.loginUser = async (req, res) => {
     const userData = user.toJSON();
     delete userData.password;
 
-    const token = jwt.sign({ userData }, JWT_SECRET);
+    const token = jwt.sign(
+      { id: userData.id, role: userData.role },
+      JWT_SECRET,
+    );
+
+    const isProduction = process.env.NODE_ENV === "production";
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      maxAge: 365 * 7 * 24 * 60 * 60 * 1000,
+    });
 
     return res.status(200).send({
       message: "Login successful",
       success: true,
-      user: userData,
+      userData,
+      token,
     });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: "Internal server error" });
+  }
+};
+
+module.exports.logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("token");
+    return res
+      .status(200)
+      .send({ message: "Logout successful", success: true });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: "Internal server error" });

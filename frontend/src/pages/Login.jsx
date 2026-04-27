@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import loginImage from "../assets/login.png";
 
 const loginCopy = {
@@ -33,6 +33,7 @@ const loginCopy = {
 
 const Login = ({ language = "ar" }) => {
   const content = loginCopy[language];
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -87,7 +88,19 @@ const Login = ({ language = "ar" }) => {
         throw new Error("Request failed");
       }
 
+      const data = await response.json();
+      if (!data?.success) {
+        throw new Error("Login unsuccessful");
+      }
+      if (data?.userData !== undefined) {
+        localStorage.setItem("user", JSON.stringify(data.userData));
+        window.dispatchEvent(new Event("auth-changed"));
+      }
+
+      // console.log(response);
+
       setSubmitStatus("success");
+      navigate("/");
     } catch {
       setSubmitStatus("error");
     } finally {
