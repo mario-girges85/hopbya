@@ -129,6 +129,9 @@ module.exports.loginUser = async (req, res) => {
     }
     const userData = user.toJSON();
     delete userData.password;
+
+    const token = jwt.sign({ userData }, JWT_SECRET);
+
     return res.status(200).send({
       message: "Login successful",
       success: true,
